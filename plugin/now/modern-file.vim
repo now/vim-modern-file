@@ -1,6 +1,6 @@
 " Vim plugin file
 " Maintainer:       Nikolai Weibull <now@bitwi.se>
-" Latest Revision:  2006-07-26
+" Latest Revision:  2007-08-27
 
 if exists("loaded_plugin_now_modern_file")
   finish
@@ -21,7 +21,7 @@ if !hasmapto('<Plug>modern_file_info')
   nmap <unique> <C-g> <Plug>modern_file_info
 endif
 nnoremap <unique> <script> <Plug>modern_file_info <SID>modern_file_info
-nnoremap <SID>modern_file_info <Esc>:call <SID>modern_file_info(v:count)<CR>
+nnoremap <silent> <SID>modern_file_info <Esc>:call <SID>modern_file_info(v:count)<CR>
 
 command File call s:modern_file_info()
 
