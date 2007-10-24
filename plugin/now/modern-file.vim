@@ -1,6 +1,6 @@
 " Vim plugin file
 " Maintainer:       Nikolai Weibull <now@bitwi.se>
-" Latest Revision:  2007-09-20
+" Latest Revision:  2007-10-24
 
 if exists("loaded_plugin_now_modern_file")
   finish
@@ -9,9 +9,6 @@ let loaded_plugin_now_modern_file = 1
 
 let s:cpo_save = &cpo
 set cpo&vim
-
-runtime lib/now.vim
-runtime lib/now/mbc.vim
 
 augroup now-modern-file
   autocmd BufWinEnter  * silent call <SID>modern_file_on_enter()
