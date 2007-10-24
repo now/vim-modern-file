@@ -1,6 +1,6 @@
 " Vim plugin file
 " Maintainer:       Nikolai Weibull <now@bitwi.se>
-" Latest Revision:  2007-08-27
+" Latest Revision:  2007-09-20
 
 if exists("loaded_plugin_now_modern_file")
   finish
@@ -50,10 +50,10 @@ function s:modern_file_info(...)
                \ 'v:val[0] != ""')
   let info_len = 0
   for [str, _hlgroup] in info
-    let info_len += g:NOW.MBC.width(str)
+    let info_len += now#mbc#width(str)
   endfor
   if info_len > 0
-    let info_len += g:NOW.MBC.width(' []') + (len(info) - 1)
+    let info_len += now#mbc#width(' []') + (len(info) - 1)
   endif
   let [line, nlines, vcol, col] = [line('.'), line('$'), virtcol('.'), col('.')]
   let extra_info = ' line ' . line . ' of ' . nlines .
@@ -62,12 +62,12 @@ function s:modern_file_info(...)
     let extra_info .= ' (byte index ' . col . ')'
   endif
 
-  let room_for_name = &columns - g:NOW.MBC.width(name_prefix) -
-                    \ g:NOW.MBC.width(name_suffix) - info_len -
-                    \ g:NOW.MBC.width(extra_info) - 1 - 10 - 1
-  let name_width = g:NOW.MBC.width(name)
+  let room_for_name = &columns - now#mbc#width(name_prefix) -
+                    \ now#mbc#width(name_suffix) - info_len -
+                    \ now#mbc#width(extra_info) - 1 - 10 - 1
+  let name_width = now#mbc#width(name)
   if name_width > room_for_name
-    let name = '…' . g:NOW.MBC.part(name, name_width - room_for_name + 1)
+    let name = '…' . now#mbc#part(name, name_width - room_for_name + 1)
   endif
 
   let ruler_saved = &ruler
