@@ -1,7 +1,3 @@
-" Vim plugin file
-" Maintainer:       Nikolai Weibull <now@bitwi.se>
-" Latest Revision:  2007-10-24
-
 if exists("loaded_plugin_now_modern_file")
   finish
 endif
@@ -10,7 +6,7 @@ let loaded_plugin_now_modern_file = 1
 let s:cpo_save = &cpo
 set cpo&vim
 
-augroup now-modern-file
+augroup plugin-now-modern-file
   autocmd BufWinEnter  * silent call <SID>modern_file_on_enter()
 augroup end
 
@@ -22,14 +18,14 @@ nnoremap <silent> <SID>modern_file_info <Esc>:call <SID>modern_file_info(v:count
 
 command File call s:modern_file_info()
 
-function s:modern_file_on_enter()
-  if &previewwindow
+function! s:modern_file_on_enter()
+  if &previewwindow || mode() != 'n'
     return
   endif
   call feedkeys("\<Plug>modern_file_info")
 endfunction
 
-function s:modern_file_info(...)
+function! s:modern_file_info(...)
   let name_prefix = bufnr('%') . '. “'
   if &buftype == 'nofile'
     let name = bufname('%')
@@ -91,3 +87,4 @@ function s:modern_file_info(...)
 endfunction
 
 let &cpo = s:cpo_save
+unlet s:cpo_save
