@@ -14,7 +14,7 @@ if !hasmapto('<Plug>modern_file_info')
   nmap <unique> <C-g> <Plug>modern_file_info
 endif
 nnoremap <unique> <script> <Plug>modern_file_info <SID>modern_file_info
-nnoremap <silent> <SID>modern_file_info <Esc>:call <SID>modern_file_info(v:count)<CR>
+nnoremap <silent> <SID>modern_file_info <Esc>:call <SID>modern_file_info()<CR>
 
 command File call s:modern_file_info()
 
@@ -26,15 +26,9 @@ function! s:modern_file_on_enter()
 endfunction
 
 function! s:modern_file_info(...)
-  let name_prefix = bufnr('%') . '. “'
-  if &buftype == 'nofile'
-    let name = bufname('%')
-  else
-    let name = substitute(expand('%:p'), $HOME, '~', '')
-    let name = name != "" ? name : '[No Name]'
-  endif
-  let name_suffix = '”'
-  " TODO: Default fileformat should be retrieved from &fileformat somehow.
+  let buffer_number = bufnr('%') . '. '
+  let name = s:get_buffer_name()
+  let suffix = s:path_relative_to_working_directory(name)
   let info = filter([[&filetype, 'None'],
                \  [(&modified ? '+' : "") . (!&modifiable ? '-' : ""), 'NOWModernFileMod'],
                \  [&readonly ? 'RO' : "", 'NOWModernFileRO'],
@@ -55,20 +49,25 @@ function! s:modern_file_info(...)
     let extra_info .= ' (byte index ' . col . ')'
   endif
 
-  let room_for_name = &columns - now#mbc#width(name_prefix) -
-                    \ now#mbc#width(name_suffix) - info_len -
+  let room_for_name = &columns - now#mbc#width(buffer_number) - info_len -
                     \ now#mbc#width(extra_info) - 1 - 10 - 1
   let name_width = now#mbc#width(name)
   if name_width > room_for_name
-    let name = '…' . now#mbc#part(name, name_width - room_for_name + 1)
+    let name = now#mbc#part(name, name_width - room_for_name + 1)
+    if len(name) < len(suffix)
+      let suffix = name
+    endif
+    let name = '…' . name
   endif
 
   let ruler_saved = &ruler
   let showcmd_saved = &showcmd
   set noruler noshowcmd
-  echon name_prefix
-  echohl Directory | echon name | echohl None
-  echon name_suffix
+  echon buffer_number
+  echohl NOWModernFileCommonPrefix
+    echon strpart(name, 0, len(name) - len(suffix))
+  echohl None
+  echon suffix
   if len(info) > 0
     echon ' ['
     let separator = ""
@@ -84,6 +83,30 @@ function! s:modern_file_info(...)
   echon extra_info
   let &showcmd = showcmd_saved
   let &ruler = ruler_saved
+endfunction
+
+function! s:get_buffer_name()
+  if &buftype == 'nofile'
+    return bufname('%')
+  endif
+  let name = s:simplify_path(expand('%:p'))
+  return name != "" ? name : '[No Name]'
+endfunction
+
+function! s:simplify_path(path)
+  if stridx(a:path, $HOME) != 0
+    return a:path
+  endif
+  return '~' . strpart(a:path, len($HOME) - ($HOME[len($HOME) - 1] == '/' ? 1 : 0))
+endfunction
+
+function! s:path_relative_to_working_directory(path)
+  let cwd = s:simplify_path(getcwd())
+  if stridx(a:path, cwd) != 0
+    return a:path
+  endif
+  let n = len(cwd)
+  return strpart(a:path, n + (len(a:path) > n && a:path[n] == '/' ? 1 : 0))
 endfunction
 
 let &cpo = s:cpo_save
