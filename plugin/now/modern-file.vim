@@ -7,7 +7,8 @@ let s:cpo_save = &cpo
 set cpo&vim
 
 augroup plugin-now-modern-file
-  autocmd BufWinEnter  * silent call <SID>modern_file_on_enter()
+  autocmd!
+  autocmd BufWinEnter * silent call <SID>modern_file_on_enter()
 augroup end
 
 if !hasmapto('<Plug>modern_file_info')
@@ -16,7 +17,7 @@ endif
 nnoremap <unique> <script> <Plug>modern_file_info <SID>modern_file_info
 nnoremap <silent> <SID>modern_file_info <Esc>:call <SID>modern_file_info()<CR>
 
-command File call s:modern_file_info()
+command! File call s:modern_file_info()
 
 function! s:modern_file_on_enter()
   if &previewwindow || mode() != 'n'
