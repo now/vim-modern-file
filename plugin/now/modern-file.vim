@@ -50,8 +50,16 @@ function! s:modern_file_info(...)
     let position .= ' (byte ' . col . ')'
   endif
 
-  let room_for_name = &columns - now#mbc#width(buffer_number) - info_len -
-                    \ now#mbc#width(extra_info) - 1 - 10 - 1
+  let showcmd_width = &showcmd ? strlen(" 1         ") : 0
+  let ruler_width = &ruler ? strlen("1,1           All") : 0
+  let avoid_enter_prompt_width = 1 + (showcmd_width == 0 && ruler_width > 0 ? 1 : 0)
+  let room_for_name = &columns -
+                    \ strlen(buffer_number) -
+                    \ info_len -
+                    \ strlen(position) -
+                    \ showcmd_width -
+                    \ ruler_width -
+                    \ avoid_enter_prompt_width
   let name_width = now#mbc#width(name)
   if name_width > room_for_name
     let name = now#mbc#part(name, name_width - room_for_name + 1)
