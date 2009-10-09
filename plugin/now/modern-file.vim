@@ -33,7 +33,7 @@ function! s:modern_file_info(...)
   let info = filter([[&filetype, 'None'],
                \  [(&modified ? '+' : "") . (!&modifiable ? '-' : ""), 'NOWModernFileMod'],
                \  [&readonly ? 'RO' : "", 'NOWModernFileRO'],
-               \  [&fileencoding, 'None'],
+               \  [&fileencoding != 'utf-8' ? &fileencoding : "", 'None'],
                \  [&fileformat != 'unix' ? &fileformat : "", 'None']],
                \ 'v:val[0] != ""')
   let info_len = 0
