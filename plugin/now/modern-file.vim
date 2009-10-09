@@ -38,10 +38,10 @@ function! s:modern_file_info(...)
                \ 'v:val[0] != ""')
   let info_len = 0
   for [str, _hlgroup] in info
-    let info_len += now#mbc#width(str)
+    let info_len += strlen(str)
   endfor
   if info_len > 0
-    let info_len += now#mbc#width(' []') + (len(info) - 1)
+    let info_len += strlen(' []') + (len(info) - 1)
   endif
   let [line, nlines, vcol, col] = [line('.'), line('$'), virtcol('.'), col('.')]
   let extra_info = ' line ' . line . ' of ' . nlines .
