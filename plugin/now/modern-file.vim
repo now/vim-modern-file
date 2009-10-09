@@ -44,10 +44,10 @@ function! s:modern_file_info(...)
     let info_len += strlen(' []') + (len(info) - 1)
   endif
   let [line, nlines, vcol, col] = [line('.'), line('$'), virtcol('.'), col('.')]
-  let extra_info = ' line ' . line . ' of ' . nlines .
+  let position = ' line ' . line . ' of ' . nlines .
                  \ ' (' . (100 * line / nlines) . '%); column ' . vcol
   if col != vcol
-    let extra_info .= ' (byte index ' . col . ')'
+    let position .= ' (byte ' . col . ')'
   endif
 
   let room_for_name = &columns - now#mbc#width(buffer_number) - info_len -
@@ -61,9 +61,6 @@ function! s:modern_file_info(...)
     let name = '…' . name
   endif
 
-  let ruler_saved = &ruler
-  let showcmd_saved = &showcmd
-  set noruler noshowcmd
   echon buffer_number
   echohl NOWModernFileCommonPrefix
     echon strpart(name, 0, len(name) - len(suffix))
@@ -81,9 +78,7 @@ function! s:modern_file_info(...)
     endfor
     echon ']'
   endif
-  echon extra_info
-  let &showcmd = showcmd_saved
-  let &ruler = ruler_saved
+  echon position
 endfunction
 
 function! s:get_buffer_name()
