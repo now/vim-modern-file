@@ -34,6 +34,7 @@ function! s:modern_file_info(...)
                \  [(&modified ? '+' : "") . (!&modifiable ? '-' : ""), 'NOWModernFileMod'],
                \  [&readonly ? 'RO' : "", 'NOWModernFileRO'],
                \  [&fileencoding != 'utf-8' ? &fileencoding : "", 'None'],
+               \  [&bomb ? 'BOM' : "", 'None'],
                \  [&fileformat != 'unix' ? &fileformat : "", 'None']],
                \ 'v:val[0] != ""')
   let info_len = 0
